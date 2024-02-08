@@ -1,0 +1,45 @@
+CREATE DATABASE db_test;
+
+USE db_test;
+
+CREATE TABLE `users`
+(
+    `id`         INT(11) NOT NULL auto_increment , 
+    `email`      VARCHAR(255) NOT NULL ,
+    `firstName`  VARCHAR(255) NOT NULL ,
+    `lastName`   VARCHAR(255) NOT NULL ,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `updated_at` DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    PRIMARY KEY (`id`),
+    UNIQUE `idx_email_unique` (`email`(255))
+);
+
+CREATE TABLE `chats`
+(
+    `id` INT(11) NOT NULL auto_increment , 
+    `name` VARCHAR(255) NOT NULL ,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `updated_at` DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    PRIMARY KEY (`id`),
+    UNIQUE `idx_name_unique` (`name`(255))
+);
+
+CREATE TABLE UserChat(
+    `userID` INT(11) NOT NULL,
+    `chatID` INT(11) NOT NULL,
+    PRIMARY KEY (userID, chatID),
+    FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (chatID) REFERENCES chats(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE `messages`(
+    `id` INT(11) NOT NULL auto_increment , 
+    `text` VARCHAR(255) NOT NULL ,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `updated_at` DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `userID` INT(11) NOT NULL,
+    `chatID` INT(11) NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (chatID) REFERENCES chats(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
