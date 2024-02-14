@@ -7,6 +7,7 @@ import {
     ChatsRouter,
     ChatsListRouter,
     MessagesRouter,
+    AuthRouter,
 } from "./routes";
 
 const app = express();
@@ -20,6 +21,7 @@ app.use("/user", UserRouter);
 app.use("/chat", ChatsRouter);
 app.use("/chats-list", ChatsListRouter);
 app.use("/messages", MessagesRouter);
+app.use("/auth", AuthRouter);
 
 app.listen(port, async () => {
     config.connect((err) => {

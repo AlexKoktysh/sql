@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { query } from "../../services/db";
+import { getRequestUser } from "../crypto/CryptoController";
 
 export const getUsers = async (req: Request, res: Response) => {
     try {
@@ -13,7 +14,7 @@ export const getUsers = async (req: Request, res: Response) => {
 export const addUser = async (req: Request, res: Response) => {
     try {
         const data = (await query(
-            `INSERT INTO users (email, firstName, lastName) VALUES ('${req.body.email}', '${req.body.firstName}', '${req.body.lastName}');`,
+            `INSERT INTO users (email, password, firstName, lastName) VALUES ('${req.body.email}', '${req.body.password}', '', '');`,
         )) as { insertId: number };
         const result = await query(
             `SELECT * FROM users WHERE id = ${data.insertId as number} LIMIT 1;`,
@@ -50,6 +51,15 @@ export const updateUser = async (req: Request, res: Response) => {
             `SELECT * FROM users WHERE id = ${req.params.id} LIMIT 1;`,
         );
         data && res.send(newItem[0]);
+    } catch (error) {
+        res.status(500).send({ error });
+    }
+};
+
+export const getProfileInfo = async (req: Request, res: Response) => {
+    try {
+        const user = await getRequestUser(req);
+        res.send(user);
     } catch (error) {
         res.status(500).send({ error });
     }
